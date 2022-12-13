@@ -241,14 +241,15 @@
 
         let tdTotalPay = document.createElement("td");
         tdTotalPay.innerText = maxSellId;
-
+        
+        document.querySelector('tbody').innerHTML = "";
         trTotal.appendChild(tdTotal);
         trTotal.appendChild(tdTotalPay);
 
         document.querySelector('tbody').appendChild(trTotal);
         document.getElementsByTagName("h1")[0].innerText = "7) Ən çox satılan məhsulun id-ni tapan bir function. ";
       
-        console.log("cox satilan id",maxSellId);
+
 
     }
 
@@ -265,7 +266,8 @@
                 quantity: countyOrder.map(x => x.totalQuantity).reduce((a,b) => a+b)
             }
 
-            console.log("8",obj)
+            respons.push(obj);
         });
+        console.log(respons);
 
     }
