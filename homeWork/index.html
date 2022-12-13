@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="./order.js"></script>
+    <script src="./methods.js"></script>
+    <title>Lesson 8 Home Work</title>
+</head>
+<body>
+
+    <h1 style="background-color: aliceblue; color:cadetblue;" >Ordes Table </h1>
+    <div style="padding: 20px;">
+        <br>
+        <input onchange="getCustomerKey(this)" type="text"><br>
+        <button onclick="trigCountCustomerId()">Exercises 2</button><br><br>
+        <button onclick="dearCustomer(orders)">Exercises 3 </button>
+        <button onclick="dearEmployee(orders)">Exercises 4 </button>
+        <button onclick="maxDiscount(orders)">Exercises 6</button>
+        <button onclick="getIdByMaxQuantity(orders)">Exercises 7 </button>
+    </div>
+
+    <table class="w3-table-all w3-hoverable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Id</th>
+                <th>Customer Id</th>
+                <th>Employee Id</th>
+                <th>Order Date</th>
+                <th>Ship City</th>
+                <th>Ship Country</th>
+                <th>Cart Lenght</th>
+                <th style="cursor: pointer">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script>
+        createTable(orders);
+
+        // 1) freight 1 dən kiçik olan sifarişləri console-a yazdır
+        console.log(getFreightSmallOne(orders));
+
+        // 2) customerID WARTH olan neçə ədəd sifariş var?
+        let keyinput = "";
+
+        function getCustomerKey(a){
+            keyinput = a.value;
+        }
+
+        function trigCountCustomerId(){
+            getCountCustomerId(orders, keyinput)
+        }
+
+        countyActivite(orders)
+    
+    </script>
+    
+</body>
+</html>

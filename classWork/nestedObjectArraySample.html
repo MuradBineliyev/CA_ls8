@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script src="./orders.js"></script>
+</head>
+
+<body>
+    <div>
+        <h1>Top 1 Order - <span id="topOrder"></span></h1>
+        <h1>Top 1 Country - <span id="topCountry"></span></h1>
+
+    </div>
+    <table class="w3-table-all w3-hoverable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Customer Id</th>
+                <th>Employee Id</th>
+                <th>Order Date</th>
+                <th>Ship City</th>
+                <th>Ship Country</th>
+                <th>Cart Lenght</th>
+                <th style="cursor: pointer" onclick="orderByTotal()">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+
+
+</body>
+<script>
+
+    function fillTable(data) {
+
+        document.querySelector('tbody').innerHTML = "";
+
+        data.forEach(element => {
+
+            let trElement = document.createElement('tr');
+
+            let idTd = document.createElement('td');
+            idTd.innerHTML = element.id;
+
+            let customerIdTd = document.createElement('td');
+            customerIdTd.innerHTML = element.customerId;
+
+            let employeeIdTd = document.createElement('td');
+            employeeIdTd.innerHTML = element.employeeId;
+
+            let orderDateTd = document.createElement('td');
+            orderDateTd.innerHTML = element.orderDate;
+
+            let shipCityTd = document.createElement('td');
+            shipCityTd.innerHTML = element.shipAddress.city;
+
+            let shipCountryTd = document.createElement('td');
+            shipCountryTd.innerHTML = element.shipAddress.country;
+
+            let cartLengthTd = document.createElement('td');
+            cartLengthTd.innerHTML = element.details.length;
+
+
+            let totalCart = 0;
+
+            element.details.forEach(item => {
+                totalCart = totalCart + ((item.unitPrice * item.quantity) * (1 - item.discount))
+            })
+
+            let cartTotalTd = document.createElement('td');
+            cartTotalTd.innerHTML = totalCart.toFixed(2);
+
+            element.cartLength = element.details.length;
+            element.totalCart = totalCart;
+
+            trElement.appendChild(idTd);
+            trElement.appendChild(customerIdTd);
+            trElement.appendChild(employeeIdTd);
+            trElement.appendChild(orderDateTd);
+            trElement.appendChild(shipCityTd);
+            trElement.appendChild(shipCountryTd);
+            trElement.appendChild(cartLengthTd);
+            trElement.appendChild(cartTotalTd);
+
+            document.querySelector('tbody').appendChild(trElement);
+        });
+    }
+
+
+    fillTable(orders);
+    let orderByTotalAsc = false;
+
+    function orderByTotal() {
+
+        if (orderByTotalAsc == false) {
+            orders.sort(function (a, b) {
+                return b.totalCart - a.totalCart;
+            });
+
+            orderByTotalAsc = true;
+
+        }
+        else {
+            orders.sort(function (a, b) {
+                return a.totalCart - b.totalCart;
+            });
+
+            orderByTotalAsc = false;
+        }
+
+        fillTable(orders);
+    }
+
+    //top order calc
+    orders.sort(function (a, b) {
+        return b.totalCart - a.totalCart;
+    })
+
+    let topOrder = orders[0];
+
+    document.getElementById('topOrder').innerHTML = topOrder.customerId + " " + topOrder.totalCart
+
+
+
+    //En çok hangi ülkeye satış yaptım VE ne kadar?
+
+    let countrySales = [];
+
+    orders.forEach(element => {
+
+        let countryData = countrySales.find(q => q.name == element.shipAddress.country);
+
+        if (countryData != undefined) {
+            countryData.totalAmount = countryData.totalAmount + element.totalCart;
+        }
+        else {
+            let newCountry = {
+                name: element.shipAddress.country,
+                totalAmount: element.totalCart
+            }
+            countrySales.push(newCountry);
+        }
+
+    });
+
+
+    let sortedCountry = countrySales.sort(function (a, b) {
+        return b.totalAmount - a.totalAmount
+    })
+
+    document.getElementById('topCountry').innerHTML = sortedCountry[0].name + " " +  sortedCountry[0].totalAmount.toFixed(2);
+
+
+
+    //En kıymetli müşterim
+    //En kıymetli çalışanım
+
+
+    //Ürün satış adet miktar
+
+    let productSalesCount = [];
+
+    orders.forEach(element => {
+
+        element.details.forEach(item => {
+            let product = productSalesCount.find(q => q.productId == item.productId);
+
+            if(product != undefined){
+                product.quantity = product.quantity + item.quantity
+            }
+            else{
+                let newProduct = {
+                    productId : item.productId,
+                    quantity : item.quantity
+                }
+                productSalesCount.push(newProduct);
+            }
+        })
+
+    })
+
+    let a = orders.filter(x=>x.freight < 1);
+    console.log("sdsfsdfs",a.length )
+    console.log("WARTH", orders.filter(x=>x.customerId == "WARTH"))
+
+    let customerSales = [];
+
+    orders.forEach(element => {
+
+        let customerData = customerSales.find(q => q.customerName == element.customerId);
+
+        if (customerData != undefined) {
+
+            customerData.totalAmount = customerData.totalAmount + element.totalCart;
+        }
+        else {
+            let newCustommer = {
+                customerName: element.customerId,
+                totalAmount: element.totalCart
+            }
+            customerSales.push(newCustommer);
+        }
+
+    });
+
+    let sortedCustommer = customerSales.sort(function (a, b) {
+        return b.totalAmount - a.totalAmount
+    })
+
+    console.log("customer", sortedCustommer[0])
+
+
+    let employeeSales = [];
+
+    orders.forEach(element => {
+
+        let customerData = employeeSales.find(q => q.empoyeeName == element.employeeId);
+
+        if (customerData != undefined) {
+
+            customerData.totalAmount = (customerData.totalAmount + element.totalCart).toFixed;
+        }
+        else {
+            let newEmployee = {
+                empoyeeName: element.employeeId,
+                totalAmount: element.totalCart
+            }
+            employeeSales.push(newEmployee);
+        }
+
+    });
+
+    let sortedEmployee = employeeSales.sort(function (a, b) {
+        return b.totalAmount - a.totalAmount
+    })
+
+    console.log("employee", sortedEmployee[0])
+
+</script>
+
+</html>
